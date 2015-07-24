@@ -29,6 +29,7 @@ public class CustomList extends ArrayAdapter<String>{
     }
     @Override
     public View getView(int position, View view, ViewGroup parent) {
+        //the parent class calls this iteratively over the listview
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView= inflater.inflate(R.layout.list_item_site, null, true);
         TextView txtTitle = (TextView) rowView.findViewById(R.id.list_item_site_textview);
