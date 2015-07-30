@@ -10,35 +10,33 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.ListView;
+
 import com.vaporware.photohunt.SiteContract.SiteEntry;
+
+import java.util.Vector;
 
 /**
  * A placeholder fragment containing a simple view.
  */
 public class MainActivityFragment extends Fragment {
 
-    public ArrayAdapter<String> mListAdapter;
     public MainActivityFragment() {
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View rootView =  inflater.inflate(R.layout.fragment_main, container, false);
-        final String SQL_QUERY = "SELECT " + SiteEntry.COLUMN_NAME_CLUE + " FROM " + SiteEntry.TABLE_NAME;
-        Integer[] tempNum = {
-                0,
-                1,
-                2
-        };
+        final String SQL_TITLE_THUMB_QUERY = "SELECT " +
+                SiteEntry._ID + ", " +
+                SiteEntry.COLUMN_NAME_THUMB + ", " +
+                SiteEntry.COLUMN_NAME_TITLE + " FROM " +
+                SiteEntry.TABLE_NAME + " LIMIT 5";
 
-        String[] tempArray = {
-                "words",
-                "are",
-                "hard"
-        };
 
+        Vector tempArray = new Vector<>();
+        Vector tempNum = new Vector<>();
+        Vector tempId = new Vector<>();
         /**
          * This is probably where I want to:
          * 1. create db
@@ -49,20 +47,37 @@ public class MainActivityFragment extends Fragment {
 
         SiteDBHelper mDBHelper = new SiteDBHelper(getActivity());
         SQLiteDatabase db = mDBHelper.getWritableDatabase();
+        mDBHelper.onUpgrade(db,2,2);
+        ContentValues values = new ContentValues();
+        values.put(SiteEntry.COLUMN_NAME_THUMB,"Thumb");
+        values.put(SiteEntry.COLUMN_NAME_TITLE,"title");
+        values.put(SiteEntry.COLUMN_NAME_IMAGE,"Image");
+        values.put(SiteEntry.COLUMN_NAME_LAT,123);
+        values.put(SiteEntry.COLUMN_NAME_LONG,321);
+        values.put(SiteEntry.COLUMN_NAME_RATING, 0);
+        db.insert(SiteEntry.TABLE_NAME, null, values);
 
-        for (int i = 0; i < 3; i++) {
-            ContentValues values = new ContentValues();
-            values.put(SiteEntry.COLUMN_NAME_CLUE,tempArray[i]);
-            values.put(SiteEntry.COLUMN_NAME_IMAGE,tempNum[i]);
-            db.insert(SiteEntry.TABLE_NAME,
-                    null,
-                    values);
+        Cursor cursor = db.rawQuery(SQL_TITLE_THUMB_QUERY,null);
+
+        if (cursor != null) {
+            if (cursor.moveToFirst() ) {
+
+                do {
+                    String tempTitle = cursor.getString(
+                            cursor.getColumnIndex(SiteEntry.COLUMN_NAME_TITLE)
+                    );
+                    String tempThumb = cursor.getString(
+                            cursor.getColumnIndex(SiteEntry.COLUMN_NAME_THUMB));
+                    String id = cursor.getString(
+                            cursor.getColumnIndex(SiteEntry._ID));
+                    tempId.add(id);
+                    tempArray.add(tempTitle);
+                    tempNum.add(tempThumb);
+                }while (cursor.moveToNext() );
+            }
         }
 
-        Cursor cursor = db.rawQuery(SQL_QUERY, null);
-
-
-        final CustomList adapter = new CustomList(getActivity(),tempArray,tempNum);
+        final CustomList adapter = new CustomList(getActivity(),tempId,tempArray,tempNum);
         ListView list = (ListView) rootView.findViewById(R.id.mainList);
         list.setAdapter(adapter);
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {

@@ -21,15 +21,15 @@ public class SiteDBHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        final String SQL_CREATE_SITES_TABLE = "CREATE TABLE " + SiteEntry.TABLE_NAME + " (" +
+        final String SQL_CREATE_SITES_TABLE = "CREATE TABLE IF NOT EXISTS " + SiteEntry.TABLE_NAME + " (" +
                 SiteEntry._ID + " INTEGER PRIMARY KEY," +
                 SiteEntry.COLUMN_NAME_TITLE + " TEXT, " +
                 SiteEntry.COLUMN_NAME_CLUE + " TEXT, " +
-                SiteEntry.COLUMN_NAME_THUMB + " TEXT NOT NULL, " +
-                SiteEntry.COLUMN_NAME_IMAGE + " TEXT NOT NULL, " +
-                SiteEntry.COLUMN_NAME_LAT + " REAL NOT NULL, " +
-                SiteEntry.COLUMN_NAME_LONG + " REAL NOT NULL, " +
-                SiteEntry.COLUMN_NAME_RATING + " INTEGER NOT NULL);";
+                SiteEntry.COLUMN_NAME_THUMB + " TEXT, " +
+                SiteEntry.COLUMN_NAME_IMAGE + " TEXT, " +
+                SiteEntry.COLUMN_NAME_LAT + " REAL, " +
+                SiteEntry.COLUMN_NAME_LONG + " REAL, " +
+                SiteEntry.COLUMN_NAME_RATING + " INTEGER);";
         db.execSQL(SQL_CREATE_SITES_TABLE);
 
     }

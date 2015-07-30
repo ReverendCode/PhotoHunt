@@ -8,6 +8,8 @@ import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import java.util.Vector;
+
 /**
  * This is copyPasta from the internet.
  * Mostly because I couldn't see any way to improve it,
@@ -17,14 +19,16 @@ import android.widget.TextView;
 public class CustomList extends ArrayAdapter<String>{
 
     private final Activity context;
-    private final String[] text;
-    private final Integer[] imageId;
+    private final Vector<String> text;
+    private final Vector imageId;
+    private final Vector id;
 
-    public CustomList(Activity context, String[] text, Integer[] imageId) {
+    public CustomList(Activity context, Vector tempId, Vector<String> text, Vector imageId) {
         super(context, R.layout.list_item_site, text);
         this.context = context;
         this.text = text;
         this.imageId = imageId;
+        this.id = tempId;
 
     }
     @Override
@@ -33,11 +37,12 @@ public class CustomList extends ArrayAdapter<String>{
         LayoutInflater inflater = context.getLayoutInflater();
         View rowView= inflater.inflate(R.layout.list_item_site, null, true);
         TextView txtTitle = (TextView) rowView.findViewById(R.id.list_item_site_textview);
+        TextView idView = (TextView) rowView.findViewById(R.id.locationValue);
 
         ImageView imageView = (ImageView) rowView.findViewById(R.id.list_item_site_imageview);
-        txtTitle.setText(text[position]);
+        txtTitle.setText(text.get(position));
 
-        imageView.setImageResource(imageId[position]);
+//        imageView.setImageResource(imageId[position]);
         return rowView;
     }
 }

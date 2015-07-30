@@ -6,6 +6,7 @@
     >
 
     <TableRow>
+
     <ImageView
         android:layout_height="match_parent"
         android:layout_width="60dp"
@@ -20,4 +21,8 @@
     android:minHeight="?android:attr/listPreferredItemHeight"/>
 
     </TableRow>
+    <TextView
+    android:visibility="invisible"
+    android:id="@+id/locationValue"
+    />
 </TableLayout>
